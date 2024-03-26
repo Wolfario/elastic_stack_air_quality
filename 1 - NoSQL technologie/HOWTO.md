@@ -1,5 +1,7 @@
 # Návod ke zprovoznění semestrální práce
 
+## Zapnutí a konfigurace
+
 1. `docker compose up -d`
 
 2. `docker exec -it mongo1 bash`
@@ -55,3 +57,7 @@ rs.initiate(
 16. `use animals`
 
 17. `db.auth("test", "pass")`
+
+## Vypnutí
+
+``docker-compose down``
