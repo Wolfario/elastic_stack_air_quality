@@ -11,7 +11,7 @@
 Následující příkaz slouží k inicializaci replikační sady (replica set). Replikační sada je soubor vzájemně propojených MongoDB serverů, který poskytuje vysokou dostupnost a odolnost proti výpadkům databáze. Celkově tato komanda inicializuje replikační sadu s názvem "rs0" a třemi členy, kteří jsou hostováni na serverech s adresami **mongo1:27017**, **mongo2:27017** a **mongo3:27017**.
 
 4. 
-```mongodb
+```js
 rs.initiate(
   {
     _id: "rs0",
@@ -37,7 +37,7 @@ rs.initiate(
 10. `use animals`
 
 11. 
-```mongodb
+```js
  db.createUser( { user: "test",
                  pwd: "pass",
                  roles: [ { role: "clusterAdmin", db: "admin" },

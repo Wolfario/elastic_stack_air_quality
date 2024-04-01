@@ -3,7 +3,7 @@
 
 1. Najděte mezi našimi údaji **3 nejčastějších druhy zvířat**. Zapište druh zvířete a množství.
 
-```mongodb
+```js
 db.animals.aggregate([
   // Skupina dokumentů podle druhu zvířat a spočítání počtu pro každý druh
   { $group: { _id: "$species", count: { $sum: 1 } } },
@@ -18,7 +18,7 @@ db.animals.aggregate([
 
 2. **Zjistěte počet** všech `Cat, ringtail`, které jsou **středně nebo těžce nemocné** (`minor` nebo `sick`) a také je vypište.
 
-```mongodb
+```js
 // Vypis takových koček
 db.animals.find( { "species" : "Cat, ringtail", $or: [{ "health_status" : "minor" }, { "health_status" : "sick" }] } ).pretty()
 
@@ -28,7 +28,7 @@ db.animals.countDocuments( { "species" : "Cat, ringtail", $or: [{ "health_status
 
 3. **Přidejte nový atribut** `age` pro všechna zvířata v naší databázi, což bude znamenat, **jak staré je zvíře** k *01.01.2023* a **vypište nejstarší zvíře**.
 
-```mongodb
+```js
 // Aktualizace mnoha dokumentů v kolekci "animals" pomoci updateMany
 db.animals.updateMany(
    {},
@@ -54,7 +54,7 @@ db.animals.find({}).sort({ "age" : -1 }).limit(1)
 
 4. **Změňte typ atributu ceny** z `string` na `double`. Také typ atributu **oblíbeného jídla** ze `string` na `array`.
 
-```mongodb
+```js
 db.animals.updateMany(
    {},
    [
@@ -86,7 +86,7 @@ db.animals.updateMany(
 
 5. **Uzdravte všechny** `Cat, ringtail` (`health_status`: `healthy`), kteří jsou **středně nebo těžce nemocní** (`health_status`: `minor` nebo `sick`). Poté **přidejte maso všem zdravým kočkám do jejich oblíbených pokrmů**, protože kočky by přece měly maso milovat (push `meat` do `favorite_dish`).
 
-```mongodb
+```js
 db.animals.updateMany(
    { 
       // Pokud je druh zvířete "Cat, ringtail" a zdravotní stav je buď "minor" nebo "sick"
