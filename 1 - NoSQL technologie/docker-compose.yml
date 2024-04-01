@@ -10,7 +10,9 @@ services:
     volumes:
       - ./data/data1:/data/db
     networks:
-      - mongoCluster
+      mongoCluster:
+        aliases:
+          - mongo1
 
   mongo2:
     image: mongo
@@ -21,7 +23,9 @@ services:
     volumes:
       - ./data/data2:/data/db
     networks:
-      - mongoCluster
+      mongoCluster:
+        aliases:
+          - mongo2
 
   mongo3:
     image: mongo
@@ -32,7 +36,9 @@ services:
     volumes:
       - ./data/data3:/data/db
     networks:
-      - mongoCluster
+      mongoCluster:
+        aliases:
+          - mongo3
 
 networks:
   mongoCluster:
