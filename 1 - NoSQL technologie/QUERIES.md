@@ -116,3 +116,190 @@ db.animals.updateMany(
    }
 )
 ```
+
+6. U všech zvířat, jejichž pohlaví je `null`, **nastavte pohlaví** na `N` a pro zvířata, která nemají `favorite_dish` (mají v `array` pouze hodnotu `null`), nastavte na `meat`
+
+```js
+/// Update null na N (neutrální) pohlaví
+db.animals.updateMany(
+   { gender: null },
+   { $set: { gender: "N" } }
+)
+
+// Přídaní meat do favorite_dish pouze s null hodnotou
+db.animals.updateMany(
+  { favorite_dish: { $size: 1, $elemMatch: { $eq: null } } },
+  { $set: { "favorite_dish.$[elem]": "meat" } },
+  { arrayFilters: [{ "elem": null }] }
+)
+```
+
+7. Vytvořte validační schéma pro `animals`, kde nakonfigurujete každý atribut tak, aby měl svůj typ a také `price` **nesmí být menší než 0** a pole `favorite_dish` **nemůže být prázdné**. Zkuste přidat neplatný dokument.
+
+```js
+// Nastavení validátoru schématu pro kolekci "animals"
+db.runCommand({
+   collMod: "animals",
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["id", "species", "name", "color", "gender", "zoo_address", "approx_birth", "health_status", "favorite_dish", "price"],
+         properties: {
+            id: {
+               bsonType: "int"
+            },
+            species: {
+               bsonType: "string"
+            },
+            name: {
+               bsonType: "string"
+            },
+            color: {
+               bsonType: "string"
+            },
+            gender: {
+               bsonType: "string",
+               "enum": ["M", "F", "N"]
+            },
+            zoo_address: {
+               bsonType: "string"
+            },
+            approx_birth: {
+               bsonType: "date"
+            },
+            health_status: {
+               bsonType: "string"
+            },
+            // Požadované pole "favorite_dish" s datovým typem "array" a minimálním počtem prvků 1
+            favorite_dish: {
+               bsonType: "array",
+               minItems: 1
+            },
+            // Požadované pole "price" s datovým typem "double" a minimální hodnotou 0
+            price: {
+               bsonType: "double",
+               minimum: 0
+            }
+         }
+      }
+   },
+   // Akce, která se provede při nesplnění validace - v tomto případě způsobí chybu
+   validationAction: "error"
+})
+
+// Přidání neplatného dokumentu
+db.animals.insertOne({
+   "id": 123456,
+   "species": "Cat",
+   "name": "Whiskers",
+   "color": "Gray",
+   "gender": "M",
+   "zoo_address": "123 Main Street",
+   "approx_birth": new Date("2019-05-15"),
+   "health_status": "Healthy",
+   "favorite_dish": [], // Empty array
+   "price": -5 // Negative value of price
+})
+```
+
+8. **Vytvořte kolekci** `dishes`, která bude obsahovat potravu ze stravy pro naše zvířata. Vytvořte validační schéma tak, že
+**každý dokument musí mít atributy** `name` (název potraviny), `health_influence` (jedna z hodnot: `heavy food`, `medicinal product`, `light food`, `healthy food`),
+a také atribut `price` - náklady na jídlo.
+
+```js
+// Vytvoření kolekci dishes
+use dishes
+
+// Vytvoření kolekce "dishes" s definovaným validátorem schématu
+db.createCollection("dishes", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["name", "health_influence", "price"],
+         properties: {
+            name: {
+               bsonType: "string"
+            },
+            // Pole "health_influence" s datovým typem "string" a omezením hodnot pomocí enum
+            health_influence: {
+               bsonType: "string",
+               enum: ["heavy food", "medicinal product", "light food", "healthy food"]
+            },
+            price: {
+               bsonType: "double"
+            }
+         }
+      }
+   },
+   validationAction: "error"
+})
+
+// Vložení více dokumentů do kolekce "dishes" s různými jídly, vlivem na zdraví a cenou
+db.dishes.insertMany([
+   { "name": "grass", "health_influence": "light food", "price": 1.25 },
+   { "name": "leaves", "health_influence": "light food", "price": 1.75 },
+   { "name": "seeds", "health_influence": "light food", "price": 2.55 },
+   { "name": "fruits", "health_influence": "healthy food", "price": 5.15 },
+   { "name": "nectar", "health_influence": "healthy food", "price": 3.40 },
+   { "name": "insects", "health_influence": "heavy food", "price": 10.15 },
+   { "name": "worms", "health_influence": "light food", "price": 8.65 },
+   { "name": "meat", "health_influence": "heavy food", "price": 15.55 },
+   { "name": "blood", "health_influence": "light food", "price": 4.45 },
+   { "name": "carrion", "health_influence": "heavy food", "price": 16.20 },
+   { "name": "pills", "health_influence": "medicinal product", "price": 12.50 }
+])
+```
+
+9. Ke každému zvířeti v kolekci `animals` **přidejte atribut** `daily_ration`, což bude pole. Pro každé zvíře přidejte k jeho `daily_ration` libovolné jídlo (`name` z `dishes`), které má `price` menší než *12.50*.
+
+```js
+use animals
+
+// Očekává se, že každý dokument v kolekci obsahuje pole "daily_ration"
+// Pole "daily_ration" musí být typu pole (array) a je povinné
+db.runCommand({
+   collMod: "animals",
+   validator: { $jsonSchema: {
+      bsonType: "object",
+      required: ["daily_ration"],
+      properties: {
+         daily_ration: {
+            bsonType: ["array"],
+         }
+      }
+   } }
+})
+
+use dishes
+
+// Jmena všech dishes která mají price menší než 12.5
+let dish_names = db.dishes.find(
+    { price: { $lt: 12.5 } },
+    { name: 1, _id: 0 }
+).toArray().map(dish => dish.name);
+
+use animals
+
+// Pro každé animal z kolekce animals
+db.animals.find({}).forEach(function(animal) {
+   // Nalezení nahodně vybraného jídla v kolekci dishes s cenou menší než 12.5
+   let random_dish = dish_names[Math.floor(Math.random() * dish_names.length)];
+
+   // Nastavení pole "daily_ration" na obsah jmena vybranéhoch jídla
+   db.animals.updateOne({ _id: animal._id }, { $set: { daily_ration: [random_dish] } });
+});
+```
+
+10. Přidejte do `daily_ration` pro všechna zvířata jejich oblíbená jídla (elementy z `favorite_dish`)
+
+```js
+// Přidání prvků z pole favorite_dish do pole daily_ration (addToSet ošetřuje opakování)
+db.animals.find().forEach(function(animal) { // Loop přes každé zvíře
+   animal.favorite_dish.forEach(function(dish) { // Loop přes každé jídlo
+      db.animals.updateOne(
+         { _id: animal._id },
+         { $addToSet: { daily_ration: dish } }
+      );
+   });
+});
+```
