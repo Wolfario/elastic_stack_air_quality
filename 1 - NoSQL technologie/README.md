@@ -39,7 +39,9 @@ Architektura řešení je založena na replikační sadě, což je standardním 
 
 Moje databáze pracuje s dvěma hlavními kolekcemi: `animals` a `dishes`.
 
-V kolekci `animals` jsou ukládána data o zvířatech. Každý dokument obsahuje informace jako *ID*, *druh zvířete*, *jméno*, *barva*, *pohlaví*, *adresa zoo*, *přibližné datum narození* atd. Data jsou strukturována v podobě objektu, kde každá položka má specifický datový typ (například: `int`, `string`, `ISO date`, `array`, `double`).
+V kolekci `animals` jsou ukládána data o zvířatech. Každý dokument obsahuje informace jako `id`, `species` (*druh zvířete*), `name` (*jméno*), `color` (*barva zvířeti*), `gender` (*pohlaví zvířeti*), `zoo_address` (*adresa zoo*), `approx_bith` (*přibližné datum narození*), `favorite_dish` (*Pole obzahující oblíbéná jídla zvířeti*), `price` (*cena*). Data jsou strukturována v podobě objektu, kde každá položka má specifický datový typ (například: `int`, `string`, `ISO date`, `array`, `double`).
+
+V kolekci `dishes` jsou data o jednotlivých jídlech. Každý dokument obsahuje informace jako `name` (*název jídla*), `health_influence` (*vlív na zdráví*) a `price` (*cena*).
 
 **Pro kontrolu integritu dat jsem nastavil validaci pomocí JSON schématu**. Například, zajišťuji, že povinná pole jsou vyplněna, že cena je číslo větší než nula, a oblíbená jídla jsou uchovávána v poli s minimálně jedním prvkem.
 
@@ -48,6 +50,8 @@ Nevybral jsem další datové struktury, protože aktuální schémata pro `anim
 Pracoval jsem s relativně malým množstvím dat, a proto jsem zatím nezvolil sharding. Volba neshardingování byla motivována aktuální velikostí dat, která není dostatečně velká na to, aby vyžadovala horizontální škálování. Přesto jsem si vědom toho, že s nárůstem objemu dat může dojít k potřebě distribuovat data napříč více uzly pomocí shardingu.
 
 Data jsem ručně vygeneroval pomocí služby [Mockaroo](https://www.mockaroo.com/)
+
+### Perzistence
 
 ### Zabezpečení
 
