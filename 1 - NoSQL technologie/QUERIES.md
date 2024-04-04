@@ -207,10 +207,7 @@ db.animals.insertOne({
 a také atribut `price` - náklady na jídlo.
 
 ```js
-// Vytvoření kolekci dishes
-use dishes
-
-// Vytvoření kolekce "dishes" s definovaným validátorem schématu
+// Vytvoření kolekce dishes s definovaným validátorem schématu
 db.createCollection("dishes", {
    validator: {
       $jsonSchema: {
@@ -253,8 +250,6 @@ db.dishes.insertMany([
 9. Ke každému zvířeti v kolekci `animals` **přidejte atribut** `daily_ration`, což bude pole. Pro každé zvíře přidejte k jeho `daily_ration` libovolné jídlo (`name` z `dishes`), které má `price` menší než *12.50*.
 
 ```js
-use animals
-
 // Očekává se, že každý dokument v kolekci obsahuje pole "daily_ration"
 // Pole "daily_ration" musí být typu pole (array) a je povinné
 db.runCommand({
@@ -270,15 +265,11 @@ db.runCommand({
    } }
 })
 
-use dishes
-
 // Jmena všech dishes která mají price menší než 12.5
 let dish_names = db.dishes.find(
     { price: { $lt: 12.5 } },
     { name: 1, _id: 0 }
 ).toArray().map(dish => dish.name);
-
-use animals
 
 // Pro každé animal z kolekce animals
 db.animals.find({}).forEach(function(animal) {
@@ -290,7 +281,7 @@ db.animals.find({}).forEach(function(animal) {
 });
 ```
 
-10. Přidejte do `daily_ration` pro všechna zvířata jejich oblíbená jídla (elementy z `favorite_dish`)
+10. Přidejte do `daily_ration` pro všechna zvířata jejich oblíbená jídla (elementy z `favorite_dish`).
 
 ```js
 // Přidání prvků z pole favorite_dish do pole daily_ration (addToSet ošetřuje opakování)
@@ -302,4 +293,57 @@ db.animals.find().forEach(function(animal) { // Loop přes každé zvíře
       );
    });
 });
+```
+
+11. **Vypište jméno, druh a také celkové náklady** na `daily_ration` zvířete, u kterého budou tyto náklady největší.
+
+```js
+db.animals.aggregate([
+    {
+        // Rozbalení pole "daily_ration" na jednotlivé hodnoty
+        $unwind: "$daily_ration"
+    },
+    {
+        // Propojení dokumentů z kolekce "animals" s dokumenty z kolekce "dishes" na základě názvu jídla
+        $lookup:
+        {
+            from: "dishes",
+            localField: "daily_ration",
+            foreignField: "name",
+            as: "dish_info"
+        }
+    },
+    {
+        // Rozbalení pole "dish_info" pro další manipulaci s informacemi o jídle
+        $unwind: "$dish_info"
+    },
+    {
+        // Seskupení podle ID zvířete, součet cen jídel a uchování informací o zvířeti
+        $group:
+        {
+            _id: "$_id",
+            total_price: { $sum: "$dish_info.price" },
+            animal_info: { $first: "$$ROOT" }
+        }
+    },
+    {
+        // Seřazení výsledků sestupně podle celkové ceny denní stravy
+        $sort: { total_price: -1 }
+    },
+    {
+        // Omezení výsledků na první záznam
+        $limit: 1
+    },
+    {
+        // Projekce výsledků pro získání požadovaných polí
+        $project:
+        {
+            _id: 0,
+            name: "$animal_info.name",
+            species: "$animal_info.species",
+            daily_ration: "$animal_info.daily_ration",
+            total_price: 1
+        }
+    }
+])
 ```
