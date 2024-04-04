@@ -347,3 +347,76 @@ db.animals.aggregate([
     }
 ])
 ```
+12. U všech zvířat, jejichž zdravotní stav je `sick` nebo `minor`, odstraníme z jejich daily_ration takové pokrmy, které
+mají `health_influence`: `heavy food` a poté pro taková zvířata, která mají `health_status`: `sick`, přidejte do jejich `daily_ration` takové jídlo, které má
+`health_influence`: `medicinal product`
+
+```js
+// Vytvoření pole jídel označených jako heavy food
+let heavyFood = db.dishes.find({ health_influence: "heavy food" }).toArray().map(dish => dish.name);
+
+db.animals.updateMany(
+    // "health_status" rovno sick nebo minor
+    { health_status: { $in: ["sick", "minor"] } },
+
+    // Odebrání jídel označených jako heavy food z pole daily_ration
+    { $pull: { daily_ration: { $in: heavyFood } } }
+);
+
+// Nalezení léčivého jídla označeného jako medicinal product'
+let medicinalDish = db.dishes.findOne({ health_influence: 'medicinal product' });
+
+// Přidání názvu léčivého jídla do pole daily_ration pro zvířata se stavem sick
+db.animals.updateMany(
+   { health_status: 'sick' },
+   { $push: { daily_ration: medicinalDish.name } }
+);
+```
+13. Najděte takový `species` zvířete, mezí kterými je nejvíc takových které mají zdravotní stav: `sick` nebo `minor`. **Vypište 3 taková zvířata**, **jejich celkový počet** (nemocných kazdého `species`) a procent (s `sick` nebo `minor`) od vsech zvířat kazdého `species`. **Odstraňte všechna tato zvířata z naší db**, protože jsme je odvezli do nemocnice.
+
+```js
+db.animals.aggregate([
+  { $match: { health_status: { $in: ["sick", "minor"] } } }, // Filtrování zvířat s sick nebo minor
+  { $group: { _id: "$species", total: { $sum: 1 } } },
+  { $sort: { total: -1 } },
+  { $limit: 3 }
+]).forEach(function(species) {
+  var percent = (species.total / db.animals.countDocuments({ species: species._id })) * 100; // Vypočítáme procento nemocných mezi všemi zvířaty konkretního species
+  print(species._id + ": " + species.total + " (" + percent.toFixed(2) + "% od všech)");
+  db.animals.deleteMany({ species: species._id });
+});
+
+// Pokusíme se najít White-fronted capuchin, který byl top 1
+db.animals.find({ species: 'White-fronted capuchin'})
+```
+
+14. Použijme jednoduchý příklad, kde odebereme *nectar* z `daily_ration` zvířete jménem *Cynthie*, poté simulujeme vypnutí uzlu a **zkontrolujeme, zda je změna uložena na jiném uzlu**.
+
+```js
+// Aktualizuje dokument v kolekci animals, kde je name rovno Cynthie,
+// a odstraní nectar z pole daily_ration
+db.animals.updateOne(
+   { "name": "Cynthie" },
+   { $pull: { "daily_ration": "nectar" } }
+)
+
+// Vypneme databázový server, vynuceně a bez čekání na dokončení aktuálních operací
+db.adminCommand({ shutdown: 1, force: true })
+
+// Zde se sami připojíme k novému Primary uzlu !!
+exit (2x)
+
+docker exec -it mongo2 bash
+
+monhosh
+
+use animals
+
+db.auth("test", "pass")
+
+// Najde dokument v kolekci animals, kde je name rovno Cynthie
+db.animals.find({"name": "Cynthie"})
+
+// Změny zůstali na svém místě
+```
+
