@@ -341,7 +341,6 @@ db.animals.aggregate([
             _id: 0,
             name: "$animal_info.name",
             species: "$animal_info.species",
-            daily_ration: "$animal_info.daily_ration",
             total_price: 1
         }
     }
@@ -353,23 +352,23 @@ mají `health_influence`: `heavy food` a poté pro taková zvířata, která maj
 
 ```js
 // Vytvoření pole jídel označených jako heavy food
-let heavyFood = db.dishes.find({ health_influence: "heavy food" }).toArray().map(dish => dish.name);
+let heavy_food = db.dishes.find({ health_influence: "heavy food" }).toArray().map(dish => dish.name);
 
 db.animals.updateMany(
     // "health_status" rovno sick nebo minor
     { health_status: { $in: ["sick", "minor"] } },
 
     // Odebrání jídel označených jako heavy food z pole daily_ration
-    { $pull: { daily_ration: { $in: heavyFood } } }
+    { $pull: { daily_ration: { $in: heavy_food } } }
 );
 
 // Nalezení léčivého jídla označeného jako medicinal product'
-let medicinalDish = db.dishes.findOne({ health_influence: 'medicinal product' });
+let medicinal_dish = db.dishes.findOne({ health_influence: 'medicinal product' });
 
 // Přidání názvu léčivého jídla do pole daily_ration pro zvířata se stavem sick
 db.animals.updateMany(
    { health_status: 'sick' },
-   { $push: { daily_ration: medicinalDish.name } }
+   { $push: { daily_ration: medicinal_dish.name } }
 );
 ```
 13. Najděte takový `species` zvířete, mezí kterými je nejvíc takových které mají zdravotní stav: `sick` nebo `minor`. **Vypište 3 taková zvířata**, **jejich celkový počet** (nemocných kazdého `species`) a procent (s `sick` nebo `minor`) od vsech zvířat kazdého `species`. **Odstraňte všechna tato zvířata z naší db**, protože jsme je odvezli do nemocnice.
@@ -390,7 +389,28 @@ db.animals.aggregate([
 db.animals.find({ species: 'White-fronted capuchin'})
 ```
 
-14. Použijme jednoduchý příklad, kde odebereme *nectar* z `daily_ration` zvířete jménem *Cynthie*, poté simulujeme vypnutí uzlu a **zkontrolujeme, zda je změna uložena na jiném uzlu**.
+14. Najděte 3 takové `species` které milují `worms` víc než kdokoli jiný (největší počet zvířat, která mají `worms` v pole `favorite_dish`). Přidejte `meat` všem zvířatům těch `species` v `daily_ration`, pokud je tam nemají.
+
+```js
+// Najděme takové species
+const tmp_species = db.animals.aggregate([  
+  { $match: { favorite_dish: "worms" } }, // Mají worms  
+  { $group: { _id: "$species", count: { $sum: 1 } } }, // Jejích počet
+  { $sort: { count: -1 } },
+  { $limit: 3 }
+]).toArray();
+
+tmp_species.forEach(species => {
+  // Zajitíme, že už maso nemají
+  const tmp_animals = db.animals.find({ species: species._id, daily_ration: { $ne: "meat" } });
+
+  tmp_animals.forEach(animal => {
+    db.animals.updateOne({ _id: animal._id }, { $push: { daily_ration: "meat" } });
+  });
+});
+```
+
+15. Použijme jednoduchý příklad, kde odebereme *nectar* z `daily_ration` zvířete jménem *Cynthie*, poté simulujeme vypnutí uzlu a **zkontrolujeme, zda je změna uložena na jiném uzlu**.
 
 ```js
 // Aktualizuje dokument v kolekci animals, kde je name rovno Cynthie,
