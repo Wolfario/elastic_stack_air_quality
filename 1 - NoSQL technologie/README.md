@@ -72,22 +72,22 @@ Datovou sadu `MOCK_DATA.json` jsem vytvořil ručně pomocí služby [Mockaroo](
 
 Kolekce `animals` z `MOCK_DATA.json`:
 
-`id`: identifikační číslo
-`species`: plemeno zvířete
-`name`: jméno zvířete
-`color`: barva zvířat
-`gender`: pohlaví zvířete (samec - M, samice - F, neznámé - N).
-`zoo_address`: Adresa zoologické zahrady, kde se zvíře nachází.
-`approx_birth`: Přibližné datum narození zvířete
-`health_status`: Zdravotní stav zvířete
-`favorite_dish`: Array oblíbených krmiv pro zvířata
-`price`: Cena zvířete
-V průběhu zadání byl také přidán atribut `daily_ration`: Denní krmná dávka zvířete
+- `id`: identifikační číslo
+- `species`: plemeno zvířete
+- `name`: jméno zvířete
+- `color`: barva zvířat
+- `gender`: pohlaví zvířete (samec - M, samice - F, neznámé - N).
+- `zoo_address`: Adresa zoologické zahrady, kde se zvíře nachází.
+- `approx_birth`: Přibližné datum narození zvířete
+- `health_status`: Zdravotní stav zvířete
+- `favorite_dish`: Array oblíbených krmiv pro zvířata
+- `price`: Cena zvířete
+- V průběhu zadání byl také přidán atribut `daily_ration`: Denní krmná dávka zvířete
 
 Kolekce `dishes` (obsahoval několik `dishes` přidaných ručně během dotazování):
-`name`: název krmiva
-`health_influence`: dopad na zdraví zvířat
-`price`: cena krmiva
+- `name`: název krmiva
+- `health_influence`: dopad na zdraví zvířat
+- `price`: cena krmiva
 
 ## Závěr
 Mohu říci, že práce s *MongoDB* mě bavila díky jejímu úzkému vztahu k JSON a *JS*, což mi umožnilo rychle a snadno si osvojit principy této databáze. Bohužel jsem při tvorbě otázek nebyl příliš kreativní a nezvládl jsem ukázat krásy *MongoDB* ze všech stran, ale bezpochybně jsem pokryl všechny její základy.
