@@ -1,0 +1,2 @@
+- pipeline.id: seoul-pipeline
+  path.config: /usr/share/logstash/pipeline/seoul_air_pollution.conf
