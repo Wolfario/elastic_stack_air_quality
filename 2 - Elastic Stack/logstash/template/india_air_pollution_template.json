@@ -27,16 +27,23 @@
           "@version": {
             "type": "keyword"
           },
+          "city": {
+            "type": "keyword"
+          },
           "timestamp_filter": {
             "type": "date", 
             "format": "yyyy-MM-dd", 
             "ignore_malformed": true
-        },
+          },
           "pm25": {
             "type": "float",
             "ignore_malformed": true
           },
           "pm10": {
+            "type": "float",
+            "ignore_malformed": true
+          },
+          "no": {
             "type": "float",
             "ignore_malformed": true
           },
@@ -81,7 +88,13 @@
             "ignore_malformed": true
           },
           "aqi_bucket": {
-            "type": "keyword"
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
           }
         }
       }
