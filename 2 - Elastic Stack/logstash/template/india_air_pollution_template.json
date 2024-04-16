@@ -29,7 +29,7 @@
           },
           "timestamp_filter": {
             "type": "date", 
-            "format": "yyyy-MM-dd HH:mm", 
+            "format": "yyyy-MM-dd", 
             "ignore_malformed": true
         },
           "pm25": {
