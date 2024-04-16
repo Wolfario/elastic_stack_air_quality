@@ -93,7 +93,7 @@ Kolekce `dishes` (obsahoval několik `dishes` přidaných ručně během dotazov
 Mohu říci, že práce s *MongoDB* mě bavila díky jejímu úzkému vztahu k JSON a *JS*, což mi umožnilo rychle a snadno si osvojit principy této databáze. Bohužel jsem při tvorbě otázek nebyl příliš kreativní a nezvládl jsem ukázat krásy *MongoDB* ze všech stran, ale bezpochybně jsem pokryl všechny její základy.
 
 ## Zdroje
-https://www.mockaroo.com/ - generování dat
-https://courses.fit.cvut.cz/BI-BIG/ - základní informace o databázích a jejich rozdílech a psaní docker-compose
-https://dev.to/mattdark/deploy-a-mongodb-cluster-with-docker-compose-4ieo - práce s clustery v MongoDB
-https://www.youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA - YouTube tutorialy o základech používání MongoDB
+- https://www.mockaroo.com/ - generování dat
+- https://courses.fit.cvut.cz/BI-BIG/ - základní informace o databázích a jejich rozdílech a psaní docker-compose
+- https://dev.to/mattdark/deploy-a-mongodb-cluster-with-docker-compose-4ieo - práce s clustery v MongoDB
+- https://www.youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA - YouTube tutorialy o základech používání MongoDB
