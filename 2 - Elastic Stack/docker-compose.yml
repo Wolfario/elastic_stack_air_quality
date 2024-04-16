@@ -18,6 +18,7 @@ services:
     image: docker.elastic.co/logstash/logstash-oss:6.2.4
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/data:/usr/share/logstash/data
       - ./logstash/template:/usr/share/logstash/template:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
