@@ -31,7 +31,7 @@
             "type": "date", 
             "format": "yyyy-MM-dd", 
             "ignore_malformed": true
-        },
+          },
           "pm25": {
             "type": "float",
             "ignore_malformed": true
