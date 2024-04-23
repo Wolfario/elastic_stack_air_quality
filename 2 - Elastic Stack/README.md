@@ -30,7 +30,7 @@ Tato databáze je vysoce kvalitní a neobsahuje žádná chybějící data. Kaž
 #### Propojení
 Společné sloupce ve všech třech datových sadách:
 - `timestamp`. Všechny datasety se překrývají v časových rozměrech mezi lety 2017 a 2019, což umožňuje jejich spojení v tomto datovém intervalu pro společnou analýzu a vizualizace.
-- `PM10` a `PM2.5`. PM - particulate matter (jemné částice). Jemné částice jsou definovány jako částice s průměrem 2,5 (`PM2.5`) a 10 (`PM10`) mikronů nebo méně. V datových sadách Indie a Soulu jsou tyto hodnoty měřeny v $\frac{μg}{m^3}$, ale v mexické datové sadě jsou o ${10^3}$ menší.
+- `PM10` a `PM2.5`. PM - particulate matter (jemné částice). Jemné částice jsou definovány jako částice s průměrem 2,5 (`PM2.5`) a 10 (`PM10`) mikronů nebo méně. Ve všech třech datových sadách jsou tyto hodnoty měřeny v $\frac{μg}{m^3}$.
 - `NO2`, `O3` a `CO`. V mexické datové sadě jsou podobné hodnoty měřeny v PPM (částic na milion) zatímco v indické jsou v mikrogramech na metr3 (`CO` v $\frac{mg}{m^3}$), a informace o jednotkách měření v Soulském datasetu chybí. 
 **Při snaze o srovnání těchto sloupců bude třeba převodu PPM na $\frac{μg}{m^3}$ nebo naopak**.
 
