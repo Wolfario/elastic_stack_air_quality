@@ -112,10 +112,6 @@
             "type": "float",
             "ignore_malformed": true
           },
-          "pst": {
-            "type": "float",
-            "ignore_malformed": true
-          },
           "rs": {
             "type": "float",
             "ignore_malformed": true
