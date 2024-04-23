@@ -39,12 +39,8 @@
           "address": {
             "type": "keyword"
           },
-          "latitude": {
-            "type": "float",
-            "ignore_malformed": true
-          },
-          "longitude": {
-            "type": "float",
+          "location": {
+            "type": "geo_point",
             "ignore_malformed": true
           },
           "so2": {
@@ -68,6 +64,14 @@
             "ignore_malformed": true
           },
           "pm25": {
+            "type": "float",
+            "ignore_malformed": true
+          },
+          "latitude": {
+            "type": "float",
+            "ignore_malformed": true
+          },
+          "longitude": {
             "type": "float",
             "ignore_malformed": true
           }
