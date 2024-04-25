@@ -16,7 +16,7 @@ Bohužel datový soubor obsahuje dostatečné množství `NaN` (nebo `null`) hod
 - 27 sloupců
 - 231592 záznamů
 
-Dataset o měření ukazatelů vzduchu v **Mexiku**. První dva sloupce představují `datetime`, což je *timestamp* měření a `station_id`, což je identifikační číslo stanice, na níž bylo měření provedeno (bohužel nemáme podrobnější informace o stanicích, ale hodnoty `station_id` se pohybují v rozmezí od 32 do 426, což naznačuje poměrně široké pokrytí území statu). Měření byla provedena v letech 2000 až 2021. Ostatní sloupce, tentokrát až do konce (protože `AQI` a `AQI_Bucket` již nebyly přepočítány), stejně jako v minulém datovém souboru obsahují informace o obsahu chemických látek a dalších drobnostech o vzduchu. Konkrétně se jedná o sloupce `PM2.5`, `PM10`, `NOx`, `O3`, `CO`, `HR` (relativní vlhkost), `NO`, `NO2`, `TMP`, `BEN`, `CH4`, `CN`, `CO2`, `H2S`, `HCNM`, `HCT`, `HRI` (interní relativní vlhkost), `IUV` (index ultrafialového záření), `PB` (atmosférický tlak), `PP` (srážky v mm), `PST` (celkově suspendované částice), `RS` (sluneční záření), `TMPI`, `UVA` (ultrafialové záření), `XIL`. Upozorním, že `TMP` je obecná teplota v °C a `TMPI` je interní teplota, také v °C. Sloupec `PST` neobsahuje žádný záznam (bude odstraněn). 
+Dataset o měření ukazatelů vzduchu v **Mexiku**. První dva sloupce představují `datetime`, což je *timestamp* měření a `station_id`, což je identifikační číslo stanice, na níž bylo měření provedeno (bohužel nemáme podrobnější informace o stanicích, ale hodnoty `station_id` se pohybují v rozmezí od 32 do 426, což naznačuje poměrně široké pokrytí území statu). Měření byla provedena v letech 2000 až 2021. Ostatní sloupce, tentokrát až do konce (protože `AQI` a `AQI_Bucket` již nebyly přepočítány), stejně jako v minulém datovém souboru obsahují informace o obsahu chemických látek a dalších drobnostech o vzduchu. Konkrétně se jedná o sloupce `PM2.5`, `PM10`, `NOx`, `O3`, `CO`, `HR` (relativní vlhkost), `NO`, `NO2`, `TMP`, `BEN`, `CH4`, `CN`, `CO2`, `H2S`, `HCNM`, `HCT`, `HRI` (interní relativní vlhkost), `IUV` (index ultrafialového záření), `PB` (atmosférický tlak), `PP` (srážky v mm), `PST` (celkově suspendované částice), `RS` (sluneční záření), `TMPI`, `UVA` (ultrafialové záření), `XIL`. Upozorním, že `TMP` je obecná teplota v °C a `TMPI` je interní teplota, také v °C. Sloupce `PST`, `HCT`, `H2S` a `CO2` neobsahují žádné záznamy (budou odstraněny). 
 Stejně jako v předchozím datovém souboru je zde mnoho hodnot `null` a `NaN` v záznamech, což nám však moc nebrání při vizualizaci a analýze.
 
 #### Dataset [seoul_air_pollution_hourly](https://www.kaggle.com/datasets/bappekim/air-pollution-in-seoul)
@@ -30,14 +30,70 @@ Tato databáze je vysoce kvalitní a neobsahuje žádná chybějící data. Kaž
 #### Propojení
 Společné sloupce ve všech třech datových sadách:
 - `timestamp`. Všechny datasety se překrývají v časových rozměrech mezi lety 2017 a 2019, což umožňuje jejich spojení v tomto datovém intervalu pro společnou analýzu a vizualizace.
-- `PM10` a `PM2.5`. PM - particulate matter (jemné částice). Jemné částice jsou definovány jako částice s průměrem 2,5 (`PM2.5`) a 10 (`PM10`) mikronů nebo méně. Ve všech třech datových sadách jsou tyto hodnoty měřeny v $\frac{μg}{m^3}$.
-- `NO2`, `O3` a `CO`. V mexické datové sadě jsou podobné hodnoty měřeny v PPM (částic na milion) zatímco v indické jsou v mikrogramech na metr3 (`CO` v $\frac{mg}{m^3}$), a informace o jednotkách měření v Soulském datasetu chybí. 
+- `PM10` a `PM2.5`. PM - particulate matter (polétavý prach). Polétavý prach je definován jako počet částic s průměrem 2,5 (`PM2.5`) resp. 10 (`PM10`) mikronů nebo méně. Ve všech třech datových sadách jsou tyto hodnoty měřeny v $\frac{μg}{m^3}$.
+- `NO2`, `O3` a `CO`. V mexické datové sadě jsou podobné hodnoty měřeny v PPM (částic na milion) zatímco v indické jsou v $\frac{μg}{m^3}$ (`CO` v $\frac{mg}{m^3}$), a informace o jednotkách měření v Soulském datasetu chybí. 
 **Při snaze o srovnání těchto sloupců bude třeba převodu PPM na $\frac{μg}{m^3}$ nebo naopak**.
 
 ### Zdroje
 - Služba s datovými sadami **Kaggle** - https://www.kaggle.com/
 
 ### Formát dat
+- Dataset [india_air_pollution_daily](https://www.kaggle.com/datasets/rohanrao/air-quality-data-in-india)
+    - `city` - `string` název města v Indii.
+    - `timestamp_filter` - `date` formatu `yyyy-MM-dd`.
+    - `pm25` - `float` particulate matter (polétavý prach) pro 2.5${μm}$ v $\frac{μg}{m^3}$.
+    - `pm10`- `float` particulate matter (olétavý prach) pro 10${μm}$ v $\frac{μg}{m^3}$.
+    - `no` - `float` oxid dusnatý v $\frac{μg}{m^3}$.
+    - `no2` - `float` dioxid dusnatý v $\frac{μg}{m^3}$.
+    - `nox` - `float` jakýkoli nitric x-oxid v PPB (parts per billion).
+    - `nh3` - `float` amoniak v $\frac{μg}{m^3}$.
+    - `co`- `float` kysličník uhelnatý v $\frac{mg}{m^3}$.
+    - `so2`- `float` kysličník siřičitý v $\frac{μg}{m^3}$.
+    - `o3`- `float` ozón v $\frac{μg}{m^3}$.
+    - `benzene`- `float` benzen v $\frac{μg}{m^3}$.
+    - `toluene`- `float` toluen v $\frac{μg}{m^3}$.
+    - `xylene`- `float` xylen v $\frac{μg}{m^3}$.
+    - `aqi` - `float` Air Quality Index.
+    - `aqi_bucket` - `string` slovní popis AQI.
+- Dataset [mexico_air_pollution_daily](https://www.kaggle.com/datasets/elianaj/mexico-air-quality-dataset?resource=download&select=stations_daily.csv)
+    > Sloupce, které neobsahovaly žádné záznamy, zde nejsou!
+    - `timestamp_filter` - `date` formatu `yyyy-MM-dd`.
+    - `station_id` - `integer` identifikační číslo měřicí stanice.
+    - `pm25` - `float` particulate matter (polétavý prach) pro 2.5${μm}$ v $\frac{μg}{m^3}$.
+    - `pm10` - `float` particulate matter (olétavý prach) pro 10${μm}$ v $\frac{μg}{m^3}$.
+    - `nox` - `float` jakýkoli nitric x-oxid v PPB (parts per billion).
+    - `o3` - `float` ozón v PPM (parts per million).
+    - `co` - `float` kysličník uhelnatý v PPM (parts per million).
+    - `hr` - `float` relativní vlhkost v procentech.
+    - `no` - `float` oxid dusnatý v PPM.
+    - `no2` - `float` dioxid dusnatý v PPM.
+    - `tmp` - `float` templota v °C.
+    - `benzene` - `float` benzen v PPM.
+    - `ch4` - `float` metan v PPM.
+    - `cn` - `float` černý uhlík v PPM.
+    - `hcnm` - `float` nemethanové uhlovodíky v PPM.
+    - `hri` - `float` relativní interní vlhkost v procentech.
+    - `iuv` - `float` ultrafialový index.
+    - `pb` - `float` barometrický tlak v ${mmHg}$.
+    - `pp` - `float` srážky v ${mm}$
+    - `rs` - `float` solární radiace v $\frac{W}{m^2}$.
+    - `tmpi` - `float` relativní interní teplota v °C.
+    - `uva` - `float` ultrafialová radiace v $\frac{mW}{m^2}$.
+    - `xylene` - `float` xylen v PPM.
+
+
+- Dataset [seoul_air_pollution_hourly](https://www.kaggle.com/datasets/bappekim/air-pollution-in-seoul)
+    - `timestamp_filter` - `date` formatu `yyyy-MM-dd HH:mm`.
+    - `station_code` - `integer` identifikační číslo měřicí stanice.
+    - `address` - `string` úplná adresa měřicí stanice.
+    - `location` - `geo_point` (v době vytvoření je stále ve formátu `array` protože nefunguje přeložení do `geo_point`) který obsahuje zeměpisnou šířku a délku (`latitude` a `longitude` jsou ve `float` formátu) a jsou souřadnicemi umístění stanice.
+    - `so2` - `float` kysličník siřičitý v $\frac{μg}{m^3}$.
+    - `no2` - `float` dioxid dusnatý v $\frac{μg}{m^3}$.
+    - `o3` - `float` ozón v $\frac{μg}{m^3}$.
+    - `co` - `float` kysličník uhelnatý v $\frac{μg}{m^3}$.
+    - `pm10` - `float` particulate matter (olétavý prach) pro 10${μm}$ v $\frac{μg}{m^3}$.
+    - `pm25` - `float` particulate matter (polétavý prach) pro 2.5${μm}$ v $\frac{μg}{m^3}$.
+
 
 ### Provedené úpravy dat
 
