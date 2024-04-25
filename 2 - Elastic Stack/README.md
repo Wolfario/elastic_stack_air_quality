@@ -96,5 +96,9 @@ Společné sloupce ve všech třech datových sadách:
 
 
 ### Provedené úpravy dat
+Při úpravě dat, o kterých jsem se již zmínil, bylo nezbytné převést hodnoty z PPM nebo PPB na $\frac{μg}{m^3}$ nebo $\frac{mg}{m^3}$. Mezi sloupci, které se překrývají ve třech mých datasetech, patří `o3`, `co` a `no2`, které byly v mexickém datasetu v jednotkách PPM a v ostatních dvou v $\frac{μg}{m^3}$.
+Pro převod z PPM na $\frac{μg}{m^3}$ je třeba násobit obsah látky v PPM její molekulární hmotností (pro o3 ≈ 48, co ≈ 28.01, no2 ≈ 46.0055) a výsledek dělit molárním objemem plynu za normálních podmínek (~24,45 $\frac{l}{n}$), a poté výsledek násobit ${10^3}$.
+Pro realizaci těchto převodů jsem použil jednoduchý Ruby kód s matematickými operacemi a kontrolou na hodnotu `nil` v Ruby bloku, který umožňuje použití Logstash.
+
 
 ## Závěr
