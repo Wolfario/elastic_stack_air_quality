@@ -80,19 +80,7 @@
             "type": "float",
             "ignore_malformed": true
           },
-          "co2": {
-            "type": "float",
-            "ignore_malformed": true
-          },
-          "h2s": {
-            "type": "float",
-            "ignore_malformed": true
-          },
           "hcnm": {
-            "type": "float",
-            "ignore_malformed": true
-          },
-          "hct": {
             "type": "float",
             "ignore_malformed": true
           },
