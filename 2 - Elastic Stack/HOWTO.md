@@ -10,8 +10,8 @@ docker-compose se spouští jediným příkazem `docker-compose up -d`.
 
 Po spuštění nástroje docker-compose v libovolném prohlížeči přejděte do rozhraní Kibana na adrese: http://127.0.0.1:5601.
 
-1) Pro vytvoření indexů, přejděte na Management > Index Patterns
-2) Zadejte všechny 3 dostupné indexy (mexico_ap, seoul_ap a india_ap). Každý index má stejný Time Filter: `timestamp_filter`.
+1) Pro vytvoření indexů, přejděte na Management > Index Patterns.
+2) Zadejte všechny 3 dostupné indexy (`mexico_ap`, `seoul_ap` a `india_ap`). Každý index má stejný Time Filter: `timestamp_filter`.
 
 ## Spouštění otázek
 
