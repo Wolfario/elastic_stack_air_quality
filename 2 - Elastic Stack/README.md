@@ -102,3 +102,5 @@ Pro realizaci těchto převodů jsem použil jednoduchý Ruby kód s matematick�
 
 
 ## Závěr
+
+Práce s technologiemi **Kibana** a **Elasticstack** byla docela zajímavá, přestože jsem si musel trochu pohrát s konfigurací, s výsledkem jsem celkově spokojený. Jsem rád, že se mi podařilo najít tak dobré soubory dat o kvalitě ovzduší, se kterými jsem mohl snadno pracovat, a že jsem se v průběhu projektu musel naučit spoustu nových věcí, za což jsem také rád.
